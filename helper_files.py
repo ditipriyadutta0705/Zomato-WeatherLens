@@ -1,6 +1,5 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-from Demos.win32cred_demo import target
 from statsmodels.tsa.seasonal import seasonal_decompose
 
 city_dic = {"Hyderabad" : "weather_data/BanjaraHills_6M.csv",
