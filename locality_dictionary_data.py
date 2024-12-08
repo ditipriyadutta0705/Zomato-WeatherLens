@@ -3,7 +3,6 @@ import pandas as pd
 def create_city_mapping():
     df = pd.read_csv("locality_id.csv", skiprows=1)
     df.reset_index(inplace=True)
-
     rows_drop = []
     for i in range(0, len(df)):
         cityname = df.iloc[i]["cityName"]
@@ -30,6 +29,8 @@ def create_city_mapping():
 #print(city_loc["Kolkata"][:-1].split("|"))
 
 def locality_id_mapping():
+    df = pd.read_csv("locality_id.csv", skiprows=1)
+    df.reset_index(inplace=True)
     locality_id_dic = {}
     for i in range(0, len(df)):
         locality = df.iloc[i]["localityName"]
