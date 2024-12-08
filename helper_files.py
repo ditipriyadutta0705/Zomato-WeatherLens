@@ -25,4 +25,4 @@ def seasonal_decompose_function(city, mode, target_variable):
     df[target_variable].fillna(method='ffill', inplace=True)
     df.sort_index(inplace=True)
     result = seasonal_decompose(df[target_variable], model=mode, period=30)
-    return result, autocorrelation_graph
+    return result

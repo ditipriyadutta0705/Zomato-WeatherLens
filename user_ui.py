@@ -64,7 +64,7 @@ if selected_city != "Select a city":
                                    options=["Temperature", "Humidity", "Wind Speed"],
                                           index=None)
            if(target_variable != "Nothing"):
-               seasonal_decompose_graph, autocorr_graph = seasonal_decompose_function(analysis_chosen_city, mode, target_variable)
+               seasonal_decompose_graph = seasonal_decompose_function(analysis_chosen_city, mode, target_variable)
                try:
                    st.subheader("Seasonality - Decomposition Plot")
                    st.pyplot(seasonal_decompose_graph.plot())
