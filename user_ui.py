@@ -1,10 +1,24 @@
+import os
 import streamlit as st
 import pandas as pd
+import sys
+import threading
 import requests
 import json
+import time
 from helper_files import seasonal_decompose, seasonal_decompose_function
+import subprocess
 
 from locality_dictionary_data import create_city_mapping, locality_id_mapping
+
+def start_weatherapi_server():
+    python_script = "weather_update_service.py"
+    def run_flask():
+        os.system(f"python {python_script}")
+    thread = threading.Thread(target=run_flask, daemon=True)
+    thread.start()
+    return "Weather update service started"
+
 
 
 time_series_cities = ["Select City", "Hyderabad", "Delhi NCR", "Kolkata", "Pune"]
@@ -16,6 +30,10 @@ st.title("Weather Information Explorer")
 st.image("vector_app.jpg")
 st.header("Get real time personalized weather information")
 
+if st.button("Start Weather Update Server"):
+    value = start_weatherapi_server()
+    st.write("Service ready")
+
 city_locality_dictionary = create_city_mapping()
 city_lists = list(city_locality_dictionary.keys())
 selected_city = st.selectbox("Select a City", options=city_lists)
@@ -26,7 +44,7 @@ def choose_locality_dropdown(selected_city):
     return locality_list
 
 def get_weather_data(locality_id):
-    weather_update_service_url = "http://127.0.0.1:5001/weather_update"
+    weather_update_service_url = "http://localhost:5001/weather_update"
     data = locality_id
     response = requests.post(weather_update_service_url, json=data)
     return response.text
