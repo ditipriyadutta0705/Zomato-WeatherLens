@@ -4,22 +4,16 @@ import pandas as pd
 import sys
 import threading
 import requests
+import http.client
 import json
 import time
 from helper_files import seasonal_decompose, seasonal_decompose_function
-import subprocess
+
+conn = http.client.HTTPSConnection("www.weatherunion.com")
+api_key = "869354ac94bfd50c787a3c17ad5fd0b5"
+headers = {'X-Zomato-Api-Key' : api_key}
 
 from locality_dictionary_data import create_city_mapping, locality_id_mapping
-
-def start_weatherapi_server():
-    python_script = "weather_update_service.py"
-    def run_flask():
-        os.system(f"python {python_script}")
-    thread = threading.Thread(target=run_flask, daemon=True)
-    thread.start()
-    return "Weather update service started"
-
-
 
 time_series_cities = ["Select City", "Hyderabad", "Delhi NCR", "Kolkata", "Pune"]
 analysis_chosen_city = ["Select City"]
@@ -29,10 +23,6 @@ selected_locality = "Select a locality"
 st.title("Weather Information Explorer")
 st.image("vector_app.jpg")
 st.header("Get real time personalized weather information")
-
-if st.button("Start Weather Update Server"):
-    value = start_weatherapi_server()
-    st.write("Service ready")
 
 city_locality_dictionary = create_city_mapping()
 city_lists = list(city_locality_dictionary.keys())
@@ -44,10 +34,13 @@ def choose_locality_dropdown(selected_city):
     return locality_list
 
 def get_weather_data(locality_id):
-    weather_update_service_url = "http://localhost:5001/weather_update"
-    data = locality_id
-    response = requests.post(weather_update_service_url, json=data)
-    return response.text
+    #weather_update_service_url = "http://localhost:5001/weather_update"
+    request_data = f"/gw/weather/external/v0/get_locality_weather_data?locality_id={locality_id}"
+    conn.request("GET", request_data, headers=headers)
+    res = conn.getresponse()
+    data = res.read()
+    response = data.decode("utf-8")
+    return response
 
 if selected_city != "Select a city":
     locality_options = choose_locality_dropdown(selected_city)
