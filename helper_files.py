@@ -5,9 +5,6 @@ import matplotlib.pyplot as plt
 from statsmodels.tsa.seasonal import seasonal_decompose
 from statsmodels.tsa.arima.model import ARIMA
 from prophet import Prophet
-from sklearn.preprocessing import MinMaxScaler
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import LSTM, Dense
 
 city_dic = {"Hyderabad" : "weather_data/BanjaraHills_6M.csv",
             "Delhi NCR" : "weather_data/KarolBagh_6M.csv",
