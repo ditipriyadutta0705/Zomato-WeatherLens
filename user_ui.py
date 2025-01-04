@@ -7,7 +7,7 @@ import requests
 import http.client
 import json
 import time
-from helper_files import seasonal_decompose, seasonal_decompose_function
+from helper_files import seasonal_decompose, seasonal_decompose_function, forecast_function
 
 conn = http.client.HTTPSConnection("www.weatherunion.com")
 api_key = "869354ac94bfd50c787a3c17ad5fd0b5"
@@ -27,6 +27,7 @@ st.header("Get real time personalized weather information")
 city_locality_dictionary = create_city_mapping()
 city_lists = list(city_locality_dictionary.keys())
 selected_city = st.selectbox("Select a City", options=city_lists)
+forecast_mode = "Nothing"
 
 def choose_locality_dropdown(selected_city):
     localities = city_locality_dictionary[selected_city]
@@ -79,5 +80,13 @@ if selected_city != "Select a city":
                try:
                    st.subheader("Seasonality - Decomposition Plot")
                    st.pyplot(seasonal_decompose_graph.plot())
+                   forecasting = "start"
                except:
                    pass
+           st.title("Forecasting Analysis")
+           forecast_mode = st.selectbox("Choose forecasting mode", options=["Naive", "ARIMA", "Prophet"])
+           if (forecast_mode != "Nothing"):
+               forecasting_graph =forecast_function(analysis_chosen_city, forecast_mode, target_variable)
+               #print("Forecasting GRAPH TYPE IS ", type(forecasting_graph))
+               st.pyplot(forecasting_graph)
+
